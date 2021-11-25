@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">YourTour</string>
+    <string name="title_activity_testing">testing_activity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+
+    <string name="title_activity_edit">EditActivity</string>
+    <string name="imageTitle">Title</string>
+    <string name="imageDescription">Description</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="btnSave">Save</string>
+    <string name="btnDelete">Delete</string>
+    <string name="image_title_label">Title</string>
+    <string name="title_activity_maps">MapsActivity</string>
+</resources>
