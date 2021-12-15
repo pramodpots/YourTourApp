@@ -43,7 +43,7 @@ class EditActivity : AppCompatActivity() {
 //                    util.readPhotoMetadata(it)
                     titleEditToolbar.title = it.imageTitle
                     titleTextInput.setText(it.imageTitle)
-                    descriptionTextInput.setText(it.imageTripTitle ?: "N/A")
+                    descriptionTextInput.setText(it.imageDescription ?: "N/A")
                     System.out.println("it.imageLatitude" + it.imageLatitude)
                 }
             }
@@ -79,7 +79,7 @@ class EditActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             val descriptionTextInput =
                 findViewById<TextInputEditText>(R.id.edit_image_description)
-            MyAdapter.items[position].imageTripTitle = descriptionTextInput.text.toString()
+            MyAdapter.items[position].imageDescription = descriptionTextInput.text.toString()
             val titleTextInput = findViewById<TextInputEditText>(R.id.edit_image_title)
             MyAdapter.items[position].imageTitle = titleTextInput.text.toString()
 

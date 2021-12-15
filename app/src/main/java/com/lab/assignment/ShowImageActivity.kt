@@ -57,7 +57,7 @@ class ShowImageActivity : AppCompatActivity() {
 
             imageView.setImageBitmap(MyAdapter.items[position].thumbnail!!)
             titleToolbar.title = MyAdapter.items[position].imageTitle
-            descriptionTextView.text = MyAdapter.items[position].imageTripTitle
+            descriptionTextView.text = MyAdapter.items[position].imageDescription
 
             val fabEdit: FloatingActionButton = findViewById(R.id.fab_edit)
             fabEdit.setOnClickListener(View.OnClickListener {

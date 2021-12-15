@@ -272,7 +272,7 @@ class GalleryActivity : AppCompatActivity() {
             Log.i("tripTitle", tripTitle)
             var imageData = ImageData(
                 imageTitle = fileNameAsTempTitle,
-                imageTripTitle = tripTitle,
+                imageDescription = tripTitle,
                 imageUri = mediaFile.file.absolutePath,
                 imageLatitude = 0.0,
                 imageLongitude = 0.0
