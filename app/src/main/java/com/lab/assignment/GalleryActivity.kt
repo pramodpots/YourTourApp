@@ -8,9 +8,11 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lab.assignment.data.ImageData
 import com.lab.assignment.data.ImageDataDao
@@ -27,20 +31,23 @@ import pl.aprilapps.easyphotopicker.*
 
 import java.util.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity() {
     private var myDataset: MutableList<ImageData> = ArrayList<ImageData>()
     private lateinit var daoObj: ImageDataDao
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var easyImage: EasyImage
     val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+//    private var mFusedLocationClient: FusedLocationProviderClient? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var tripTitle: String
+    private lateinit var util: Util
 
     companion object {
         val ADAPTER_ITEM_DELETED = 100
         private const val REQUEST_READ_EXTERNAL_STORAGE = 2987
         private const val REQUEST_WRITE_EXTERNAL_STORAGE = 7829
         private const val REQUEST_CAMERA_CODE = 100
-
     }
 
     val startForResult =
@@ -63,7 +70,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+//        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
 
         initData()
         // Log.d("TAG", "message")
@@ -74,6 +84,11 @@ class MainActivity : AppCompatActivity() {
         mAdapter = MyAdapter(myDataset) as Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
 
+        val extras = intent.extras
+        if (extras != null) {
+            tripTitle = extras.getString("tripTitle").toString()
+        }
+
         // required by Android 6.0 +
         checkPermissions(applicationContext)
         initEasyImage()
@@ -81,15 +96,9 @@ class MainActivity : AppCompatActivity() {
         // the floating button that will allow us to get the images from the Gallery
         val fabGallery: FloatingActionButton = findViewById(R.id.fab_gallery)
         fabGallery.setOnClickListener(View.OnClickListener {
-            easyImage.openChooser(this@MainActivity)
+            easyImage.openChooser(this@GalleryActivity)
         })
 
-        // the floating button of map will launch map activity
-        val fabMap: FloatingActionButton = findViewById(R.id.fab_map)
-        fabMap.setOnClickListener(View.OnClickListener {
-            val intent: Intent = Intent(this, MapsActivity::class.java)
-            startActivity(intent)
-        })
     }
 
     /**
@@ -107,7 +116,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initData() {
         GlobalScope.launch {
-            daoObj = (this@MainActivity.application as ImageApplication)
+            daoObj = (this@GalleryActivity.application as ImageApplication)
                 .databaseObj.imageDataDao()
             myDataset.addAll(daoObj.getItems())
         }
@@ -249,18 +258,43 @@ class MainActivity : AppCompatActivity() {
      * @param returnedPhotos
      * @return
      */
+    @SuppressLint("MissingPermission")
     private fun getImageData(returnedPhotos: Array<MediaFile>): List<ImageData> {
         val imageDataList: MutableList<ImageData> = ArrayList<ImageData>()
+        var imgLat = 0.0
+        var imgLng = 0.0
+
+
+
+        Log.i("=============>", imgLat.toString() + imgLng.toString())
         for (mediaFile in returnedPhotos) {
             val fileNameAsTempTitle = mediaFile.file.name
+            Log.i("tripTitle", tripTitle)
             var imageData = ImageData(
                 imageTitle = fileNameAsTempTitle,
-                imageUri = mediaFile.file.absolutePath
+                imageTripTitle = tripTitle,
+                imageUri = mediaFile.file.absolutePath,
+                imageLatitude = 0.0,
+                imageLongitude = 0.0
             )
             // Update the database with the newly created object
+//            util = Util()
+//            var latlag = util.readPhotoMetadata(imageData)
             var id = insertData(imageData)
             imageData.id = id
             imageDataList.add(imageData)
+
+            // update location details
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener {location : Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    Log.i("location", location.toString())
+                    imgLat = location?.latitude!!
+                    imgLng = location?.longitude!!
+                    imageData.imageLatitude = imgLat
+                    imageData.imageLongitude = imgLng
+                }
+
         }
         return imageDataList
     }

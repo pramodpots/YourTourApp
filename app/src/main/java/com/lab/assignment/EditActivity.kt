@@ -16,10 +16,11 @@ class EditActivity : AppCompatActivity() {
     lateinit var daoObj: ImageDataDao
     val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
-
+        var util = Util()
         daoObj = (this@EditActivity.application as ImageApplication)
             .databaseObj.imageDataDao()
         val bundle: Bundle? = intent.extras
@@ -39,10 +40,11 @@ class EditActivity : AppCompatActivity() {
 
                 MyAdapter.items[position].let {
                     imageView.setImageBitmap(it.thumbnail)
-
+//                    util.readPhotoMetadata(it)
                     titleEditToolbar.title = it.imageTitle
                     titleTextInput.setText(it.imageTitle)
-                    descriptionTextInput.setText(it.imageDescription ?: "N/A")
+                    descriptionTextInput.setText(it.imageTripTitle ?: "N/A")
+                    System.out.println("it.imageLatitude" + it.imageLatitude)
                 }
             }
         }
@@ -77,7 +79,7 @@ class EditActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             val descriptionTextInput =
                 findViewById<TextInputEditText>(R.id.edit_image_description)
-            MyAdapter.items[position].imageDescription = descriptionTextInput.text.toString()
+            MyAdapter.items[position].imageTripTitle = descriptionTextInput.text.toString()
             val titleTextInput = findViewById<TextInputEditText>(R.id.edit_image_title)
             MyAdapter.items[position].imageTitle = titleTextInput.text.toString()
 

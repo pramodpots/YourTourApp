@@ -2,6 +2,7 @@ package com.lab.assignment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,6 +20,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lab.assignment.databinding.ActivityMapsBinding
 import java.text.DateFormat
 import java.util.*
@@ -56,6 +59,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mButtonEnd!!.isEnabled = false
         }
         mButtonEnd!!.isEnabled = false
+
+
+        val fabMap: FloatingActionButton = findViewById(R.id.fab_gallery_activity)
+        fabMap.setOnClickListener(View.OnClickListener {
+            val intent: Intent = Intent(this, GalleryActivity::class.java)
+            var tripTitle = findViewById<EditText>(R.id.etTripTitle)
+
+            intent.putExtra("tripTitle", tripTitle.text.toString())
+            startActivity(intent)
+        })
     }
 
     private fun startLocationUpdates() {
