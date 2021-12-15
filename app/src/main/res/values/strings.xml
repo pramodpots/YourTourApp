@@ -11,9 +11,19 @@
     <string name="title_activity_edit">EditActivity</string>
     <string name="imageTitle">Title</string>
     <string name="imageDescription">Description</string>
+    <string name="imageTripTitle">TripTitle</string>
+    <string name="imageDateTime">DateTime</string>
+    <string name="imageLatitude">Latitude</string>
+    <string name="imageLongitude">Longitude</string>
+    <string name="imageBarometricPressure">BarometricPressure</string>
+    <string name="imageTemperature">Temperature</string>
+
     <string name="btnCancel">Cancel</string>
     <string name="btnSave">Save</string>
     <string name="btnDelete">Delete</string>
     <string name="image_title_label">Title</string>
     <string name="title_activity_maps">MapsActivity</string>
+
+    <!-- Tab bar labels   -->
+<!--    <string name="title_activity_maps">MapsActivity</string>-->
 </resources>
