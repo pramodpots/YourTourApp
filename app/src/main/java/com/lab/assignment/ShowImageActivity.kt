@@ -52,12 +52,26 @@ class ShowImageActivity : AppCompatActivity() {
         if (position != -1) {
             val imageView = findViewById<ImageView>(R.id.show_image)
             val titleToolbar = findViewById<Toolbar>(R.id.show_toolbar)
-            val descriptionTextView = findViewById<TextView>(R.id.show_image_description)
+
+            val tvDescription = findViewById<TextView>(R.id.tvDescription)
+            val tvTripTitle = findViewById<TextView>(R.id.tvTripTitle)
+            val tvDateTime = findViewById<TextView>(R.id.tvDateTime)
+            val tvLatitude = findViewById<TextView>(R.id.tvLatitude)
+            val tvLongitude = findViewById<TextView>(R.id.tvLongitude)
+            val tvBarometricPressure = findViewById<TextView>(R.id.tvBarometricPressure)
+            val tvTemperature = findViewById<TextView>(R.id.tvTemperature)
+
             val imageData = MyAdapter.items[position]
 
             imageView.setImageBitmap(MyAdapter.items[position].thumbnail!!)
             titleToolbar.title = MyAdapter.items[position].imageTitle
-            descriptionTextView.text = MyAdapter.items[position].imageDescription
+            tvDescription.text = "Description: " + imageData.imageDescription
+            tvTripTitle.text = "TripTitle: " + imageData.imageTripTitle
+            tvDateTime.text = "DateTime: " + imageData.imageDateTime
+            tvLatitude.text = "Latitude: " + imageData.imageLatitude
+            tvLongitude.text = "Longitude: " + imageData.imageLongitude
+            tvBarometricPressure.text = "Barometric: " + imageData.imageBarometricPressure
+            tvTemperature.text = "Temperature: " + imageData.imageTemperature
 
             val fabEdit: FloatingActionButton = findViewById(R.id.fab_edit)
             fabEdit.setOnClickListener(View.OnClickListener {

@@ -28,6 +28,9 @@ import com.lab.assignment.data.ImageData
 import com.lab.assignment.data.ImageDataDao
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 import java.util.ArrayList
 
@@ -38,7 +41,6 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var easyImage: EasyImage
     val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-//    private var mFusedLocationClient: FusedLocationProviderClient? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var tripTitle: String
     private lateinit var util: Util
@@ -264,22 +266,29 @@ class GalleryActivity : AppCompatActivity() {
         var imgLat = 0.0
         var imgLng = 0.0
 
-
-
         Log.i("=============>", imgLat.toString() + imgLng.toString())
         for (mediaFile in returnedPhotos) {
             val fileNameAsTempTitle = mediaFile.file.name
             Log.i("tripTitle", tripTitle)
+            if (tripTitle.isEmpty()) {
+                tripTitle = "Add Trip Title"
+            }
+            var datetime = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneOffset.UTC)
+                .format(Instant.now())
+
             var imageData = ImageData(
                 imageTitle = fileNameAsTempTitle,
-                imageDescription = tripTitle,
-                imageUri = mediaFile.file.absolutePath,
+                imageDescription = "Add Description",
+                imageTripTitle = tripTitle,
+                imageDateTime = datetime.toString(),
                 imageLatitude = 0.0,
-                imageLongitude = 0.0
+                imageLongitude = 0.0,
+                imageBarometricPressure = "0.0",
+                imageTemperature = "0.0",
+                imageUri = mediaFile.file.absolutePath,
             )
-            // Update the database with the newly created object
-//            util = Util()
-//            var latlag = util.readPhotoMetadata(imageData)
             var id = insertData(imageData)
             imageData.id = id
             imageDataList.add(imageData)
