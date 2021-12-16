@@ -37,7 +37,8 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (items[position].thumbnail == null) {
+        var imageData = items[position]
+        if (items[position].thumbnailUri == null) {
             items[position].let {
                 scope.launch {
                     val bitmap =
@@ -48,6 +49,13 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
                 }
             }
+        } else {
+            /* load thumbnail from disk if exists */
+            var thumbnailBitmap = BitmapFactory.decodeFile(items[position].thumbnailUri)
+            if (thumbnailBitmap == null) {
+                thumbnailBitmap = Util.makeThumbnail(imageData.imageUri, imageData.thumbnailUri)
+            }
+            holder.imageView.setImageBitmap(thumbnailBitmap)
         }
 
         holder.itemView.setOnClickListener(View.OnClickListener {

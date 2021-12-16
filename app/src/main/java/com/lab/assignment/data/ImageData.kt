@@ -18,10 +18,8 @@ data class ImageData(
     @ColumnInfo(name="longitude") var imageLongitude: Double,
     @ColumnInfo(name="barometricPressure") var imageBarometricPressure: String? = null,
     @ColumnInfo(name="temperature") var imageTemperature: String? = null,
-    @ColumnInfo(name="thumbnailUri") var thumbnailUri: String? = null,)
+    @ColumnInfo(name="thumbnailUri") var thumbnailUri: String,)
 {
     @Ignore
     var thumbnail: Bitmap? = null
-
-
 }

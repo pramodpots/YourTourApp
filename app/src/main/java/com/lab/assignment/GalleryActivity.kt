@@ -308,6 +308,8 @@ class GalleryActivity : AppCompatActivity() {
                 .withZone(ZoneOffset.UTC)
                 .format(Instant.now())
 
+//            val bitmap = MyAdapter.decodeSampledBitmapFromResource(mediaFile.file.absolutePath, 150, 150)
+            var thumbURI = Util.getNewThumbnailPath(applicationContext)
             var imageData = ImageData(
                 imageTitle = fileNameAsTempTitle,
                 imageDescription = "Add Description",
@@ -318,7 +320,10 @@ class GalleryActivity : AppCompatActivity() {
                 imageBarometricPressure = this.mPressureValue.toString(),
                 imageTemperature = this.mTemperatureValue.toString(),
                 imageUri = mediaFile.file.absolutePath,
+                thumbnailUri = thumbURI
             )
+            val bitmap = Util.makeThumbnail(imageData.imageUri, imageData.thumbnailUri)
+            imageData.thumbnail = bitmap
 
             // update location details
             fusedLocationClient.lastLocation
