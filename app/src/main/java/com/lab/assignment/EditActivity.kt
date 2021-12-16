@@ -20,7 +20,6 @@ class EditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
-        var util = Util()
         daoObj = (this@EditActivity.application as ImageApplication)
             .databaseObj.imageDataDao()
         val bundle: Bundle? = intent.extras
@@ -30,7 +29,7 @@ class EditActivity : AppCompatActivity() {
             // this is the image position in the itemList
             position = bundle.getInt("position")
             if (position != -1) {
-//                val imageView = findViewById<ImageView>(R.id.edit_image)
+                val imageView = findViewById<ImageView>(R.id.edit_image)
                 val titleEditToolbar = findViewById<Toolbar>(R.id.editor_toolbar)
                 val titleTextInput = findViewById<TextInputEditText>(R.id.edit_image_title)
                 val descriptionTextInput =
@@ -51,8 +50,7 @@ class EditActivity : AppCompatActivity() {
                 makeButtonListeners(position)
 
                 MyAdapter.items[position].let {
-//                    imageView.setImageBitmap(it.thumbnail)
-//                    util.readPhotoMetadata(it)
+                    imageView.setImageBitmap(it.thumbnail)
                     titleEditToolbar.title = it.imageTitle
                     titleTextInput.setText(it.imageTitle)
                     descriptionTextInput.setText(it.imageDescription ?: "N/A")
@@ -63,7 +61,6 @@ class EditActivity : AppCompatActivity() {
                     barometricTextInput.setText(it.imageBarometricPressure ?: "N/A")
                     temperatureTextInput.setText(it.imageTemperature ?: "N/A")
 
-                    System.out.println("it.imageLatitude" + it.imageLatitude)
                 }
             }
         }

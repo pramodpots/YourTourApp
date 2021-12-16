@@ -8,6 +8,10 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +38,7 @@ import java.time.format.DateTimeFormatter
 
 import java.util.ArrayList
 
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity(), SensorEventListener {
     private var myDataset: MutableList<ImageData> = ArrayList<ImageData>()
     private lateinit var daoObj: ImageDataDao
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
@@ -43,7 +47,11 @@ class GalleryActivity : AppCompatActivity() {
     val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var tripTitle: String
-    private lateinit var util: Util
+    private lateinit var sensorManager: SensorManager
+    private var pressure: Sensor? = null
+    private var temprature: Sensor? = null
+    private var mPressureValue: Float = 0.0f
+    private var mTemperatureValue: Float = 0.0f
 
     companion object {
         val ADAPTER_ITEM_DELETED = 100
@@ -76,6 +84,14 @@ class GalleryActivity : AppCompatActivity() {
 //        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+        temprature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+
+        sensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, temprature, SensorManager.SENSOR_DELAY_NORMAL)
 
         initData()
         // Log.d("TAG", "message")
@@ -247,11 +263,12 @@ class GalleryActivity : AppCompatActivity() {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun onPhotosReturned(returnedPhotos: Array<MediaFile>) {
-        myDataset.addAll(getImageData(returnedPhotos))
-
-        // we tell the adapter that the data is changed and hence the grid needs
-        mAdapter.notifyDataSetChanged()
-        mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
+        getImageData(returnedPhotos)
+//        myDataset.addAll(getImageData(returnedPhotos))
+//
+//        // we tell the adapter that the data is changed and hence the grid needs
+//        mAdapter.notifyDataSetChanged()
+//        mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
     }
 
     /**
@@ -261,7 +278,7 @@ class GalleryActivity : AppCompatActivity() {
      * @return
      */
     @SuppressLint("MissingPermission")
-    private fun getImageData(returnedPhotos: Array<MediaFile>): List<ImageData> {
+    private fun getImageData(returnedPhotos: Array<MediaFile>) {
         val imageDataList: MutableList<ImageData> = ArrayList<ImageData>()
         var imgLat = 0.0
         var imgLng = 0.0
@@ -285,13 +302,10 @@ class GalleryActivity : AppCompatActivity() {
                 imageDateTime = datetime.toString(),
                 imageLatitude = 0.0,
                 imageLongitude = 0.0,
-                imageBarometricPressure = "0.0",
-                imageTemperature = "0.0",
+                imageBarometricPressure = this.mPressureValue.toString(),
+                imageTemperature = this.mTemperatureValue.toString(),
                 imageUri = mediaFile.file.absolutePath,
             )
-            var id = insertData(imageData)
-            imageData.id = id
-            imageDataList.add(imageData)
 
             // update location details
             fusedLocationClient.lastLocation
@@ -302,9 +316,37 @@ class GalleryActivity : AppCompatActivity() {
                     imgLng = location?.longitude!!
                     imageData.imageLatitude = imgLat
                     imageData.imageLongitude = imgLng
+                    var id = insertData(imageData)
+                    imageData.id = id
+                    imageDataList.add(imageData)
+
+                    myDataset.add(imageData)
+
+                    // we tell the adapter that the data is changed and hence the grid needs
+                    mAdapter.notifyDataSetChanged()
+                    mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
+//                    mAdapter.notifyDataSetChanged()
                 }
 
         }
-        return imageDataList
+//        return imageDataList
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+
+        if (event != null) {
+            if (event.sensor.type == Sensor.TYPE_PRESSURE) {
+                this.mPressureValue = event.values[0]
+                Log.i("mPressureValue", this.mPressureValue.toString())
+            }
+            if (event.sensor.type == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+                this.mTemperatureValue = event.values[0]
+                Log.i("mTemperatureValue", this.mTemperatureValue.toString())
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+
     }
 }
