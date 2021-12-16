@@ -38,8 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val intent = Intent(applicationContext, AllSensorService::class.java)
-//        startService(intent)
+
 
 
         binding = ActivityMapsBinding.inflate(layoutInflater)

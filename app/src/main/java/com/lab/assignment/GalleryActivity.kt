@@ -4,9 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -22,6 +20,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -38,7 +37,7 @@ import java.time.format.DateTimeFormatter
 
 import java.util.ArrayList
 
-class GalleryActivity : AppCompatActivity(), SensorEventListener {
+class GalleryActivity : AppCompatActivity() {
     private var myDataset: MutableList<ImageData> = ArrayList<ImageData>()
     private lateinit var daoObj: ImageDataDao
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
@@ -85,13 +84,15 @@ class GalleryActivity : AppCompatActivity(), SensorEventListener {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//
+//        pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+//        temprature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+//
+//        sensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_NORMAL);
+//        sensorManager.registerListener(this, temprature, SensorManager.SENSOR_DELAY_NORMAL)
 
-        pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
-        temprature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-
-        sensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, temprature, SensorManager.SENSOR_DELAY_NORMAL)
+        LocalBroadcastManager.getInstance(this).registerReceiver(sensorValueReceiver, IntentFilter("sensorIntent"))
 
         initData()
         // Log.d("TAG", "message")
@@ -117,6 +118,8 @@ class GalleryActivity : AppCompatActivity(), SensorEventListener {
             easyImage.openChooser(this@GalleryActivity)
         })
 
+        val intent = Intent(applicationContext, SensorDataService::class.java)
+        startService(intent)
     }
 
     /**
@@ -238,6 +241,16 @@ class GalleryActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    private val sensorValueReceiver: BroadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val bundle = intent?.extras
+            if (bundle != null) {
+                mPressureValue = bundle.getString("mPressureValue").toString().toFloat()
+                mTemperatureValue = bundle.getString("mTemperatureValue").toString().toFloat()
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -325,28 +338,8 @@ class GalleryActivity : AppCompatActivity(), SensorEventListener {
                     // we tell the adapter that the data is changed and hence the grid needs
                     mAdapter.notifyDataSetChanged()
                     mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
-//                    mAdapter.notifyDataSetChanged()
                 }
 
         }
-//        return imageDataList
-    }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-
-        if (event != null) {
-            if (event.sensor.type == Sensor.TYPE_PRESSURE) {
-                this.mPressureValue = event.values[0]
-                Log.i("mPressureValue", this.mPressureValue.toString())
-            }
-            if (event.sensor.type == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-                this.mTemperatureValue = event.values[0]
-                Log.i("mTemperatureValue", this.mTemperatureValue.toString())
-            }
-        }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-
     }
 }
