@@ -37,23 +37,23 @@ import java.time.format.DateTimeFormatter
 
 import java.util.ArrayList
 
+/**
+ * Activity which shows thumbnails of images in grid view
+ * User can navigate to show image activity on clicking of thumbnail
+ */
 class GalleryActivity : AppCompatActivity() {
     private var myDataset: MutableList<ImageData> = ArrayList<ImageData>()
     private lateinit var daoObj: ImageDataDao
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var easyImage: EasyImage
-    val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var tripTitle: String
     private lateinit var sensorManager: SensorManager
-    private var pressure: Sensor? = null
-    private var temprature: Sensor? = null
     private var mPressureValue: Float = 0.0f
     private var mTemperatureValue: Float = 0.0f
 
     companion object {
-        val ADAPTER_ITEM_DELETED = 100
         private const val REQUEST_READ_EXTERNAL_STORAGE = 2987
         private const val REQUEST_WRITE_EXTERNAL_STORAGE = 7829
         private const val REQUEST_CAMERA_CODE = 100
@@ -67,7 +67,7 @@ class GalleryActivity : AppCompatActivity() {
                 val del_flag = result.data?.getIntExtra("deletion_flag", -1)!!
                 if (pos != -1 && id != -1) {
                     if (result.resultCode == Activity.RESULT_OK) {
-                        when(del_flag){
+                        when (del_flag) {
                             -1, 0 -> mAdapter.notifyDataSetChanged()
                             else -> mAdapter.notifyItemRemoved(pos)
                         }
@@ -79,23 +79,15 @@ class GalleryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
-//        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        // for getting location updates
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
-//        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-//
-//        pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
-//        temprature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-//
-//        sensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_NORMAL);
-//        sensorManager.registerListener(this, temprature, SensorManager.SENSOR_DELAY_NORMAL)
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(sensorValueReceiver, IntentFilter("sensorIntent"))
+        // get sensor data from sensor service through broadcast
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(sensorValueReceiver, IntentFilter("sensorIntent"))
 
         initData()
-        // Log.d("TAG", "message")
+
         mRecyclerView = findViewById(R.id.grid_recycler_view)
         // set up the RecyclerView
         val numberOfColumns = 4
@@ -103,6 +95,7 @@ class GalleryActivity : AppCompatActivity() {
         mAdapter = MyAdapter(myDataset) as Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
 
+        // get trip title from previous activity from inten extras
         val extras = intent.extras
         if (extras != null) {
             tripTitle = extras.getString("tripTitle").toString()
@@ -110,14 +103,18 @@ class GalleryActivity : AppCompatActivity() {
 
         // required by Android 6.0 +
         checkPermissions(applicationContext)
+
+        // initialize easy image library
         initEasyImage()
 
         // the floating button that will allow us to get the images from the Gallery
+        // or open camera based on user input
         val fabGallery: FloatingActionButton = findViewById(R.id.fab_gallery)
         fabGallery.setOnClickListener(View.OnClickListener {
             easyImage.openChooser(this@GalleryActivity)
         })
 
+        // start sensor service
         val intent = Intent(applicationContext, SensorDataService::class.java)
         startService(intent)
     }
@@ -241,7 +238,10 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
-    private val sensorValueReceiver: BroadcastReceiver = object: BroadcastReceiver() {
+    /**
+     * Receive data from sensor service and update it in local variable for further access
+     */
+    private val sensorValueReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
             if (bundle != null) {
@@ -251,6 +251,9 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * When easy image library returns images save to database
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -274,42 +277,35 @@ class GalleryActivity : AppCompatActivity() {
      * add the selected images to the grid
      * @param returnedPhotos
      */
-    @SuppressLint("NotifyDataSetChanged")
     private fun onPhotosReturned(returnedPhotos: Array<MediaFile>) {
         getImageData(returnedPhotos)
-//        myDataset.addAll(getImageData(returnedPhotos))
-//
-//        // we tell the adapter that the data is changed and hence the grid needs
-//        mAdapter.notifyDataSetChanged()
-//        mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
     }
 
     /**
      * given a list of photos, it creates a list of ImageData objects
      * we do not know how many elements we will have
-     * @param returnedPhotos
+     * it adds current location and sensor details to image data to be saved
      * @return
      */
     @SuppressLint("MissingPermission")
     private fun getImageData(returnedPhotos: Array<MediaFile>) {
         val imageDataList: MutableList<ImageData> = ArrayList<ImageData>()
-        var imgLat = 0.0
-        var imgLng = 0.0
 
-        Log.i("=============>", imgLat.toString() + imgLng.toString())
         for (mediaFile in returnedPhotos) {
             val fileNameAsTempTitle = mediaFile.file.name
-            Log.i("tripTitle", tripTitle)
-            if (tripTitle.isEmpty()) {
+            if (tripTitle.isEmpty()) { // If no trip title present entry dummy
                 tripTitle = "Add Trip Title"
             }
+            // get current timestamp
             var datetime = DateTimeFormatter
                 .ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneOffset.UTC)
                 .format(Instant.now())
 
-//            val bitmap = MyAdapter.decodeSampledBitmapFromResource(mediaFile.file.absolutePath, 150, 150)
+            // get uri for thumbnail
             var thumbURI = Util.getNewThumbnailPath(applicationContext)
+
+            // create instance of ImageData with basic details
             var imageData = ImageData(
                 imageTitle = fileNameAsTempTitle,
                 imageDescription = "Add Description",
@@ -322,29 +318,26 @@ class GalleryActivity : AppCompatActivity() {
                 imageUri = mediaFile.file.absolutePath,
                 thumbnailUri = thumbURI
             )
-            val bitmap = Util.makeThumbnail(imageData.imageUri, imageData.thumbnailUri)
-//            imageData.thumbnail = bitmap
 
-            // update location details
+            // update location details when received latest location
             fusedLocationClient.lastLocation
-                .addOnSuccessListener {location : Location? ->
+                .addOnSuccessListener { location: Location? ->
                     // Got last known location. In some rare situations this can be null.
-                    Log.i("location", location.toString())
-                    imgLat = location?.latitude!!
-                    imgLng = location?.longitude!!
+                    var imgLat = location?.latitude!!
+                    var imgLng = location?.longitude!!
                     imageData.imageLatitude = imgLat
                     imageData.imageLongitude = imgLng
                     var id = insertData(imageData)
                     imageData.id = id
                     imageDataList.add(imageData)
 
+                    // add image to database
                     myDataset.add(imageData)
 
                     // we tell the adapter that the data is changed and hence the grid needs
                     mAdapter.notifyDataSetChanged()
                     mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
                 }
-
         }
     }
 }

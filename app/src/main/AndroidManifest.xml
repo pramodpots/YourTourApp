@@ -76,8 +76,7 @@
             android:exported="false" />
         <activity
             android:name=".GalleryActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".ShowImageActivity"
             android:exported="true" />

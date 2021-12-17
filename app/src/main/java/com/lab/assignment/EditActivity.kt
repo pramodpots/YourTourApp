@@ -11,6 +11,11 @@ import com.google.android.material.textfield.TextInputEditText
 import com.lab.assignment.data.ImageDataDao
 import kotlinx.coroutines.*
 
+/**
+ * Activity which performs edit and deletion of images
+ * Shows metadata of image and is editable for user
+ * User can save changes or delete file or cancel and go back
+ */
 class EditActivity : AppCompatActivity() {
 
     lateinit var daoObj: ImageDataDao
