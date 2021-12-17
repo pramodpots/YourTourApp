@@ -6,7 +6,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
-import android.hardware.SensorManager
 import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -136,7 +135,7 @@ class GalleryActivityView : AppCompatActivity() {
         GlobalScope.launch {
             daoObj = (this@GalleryActivityView.application as ImageApplication)
                 .databaseObj.imageDataDao()
-            myDataset.addAll(daoObj.getItems())
+            myDataset.addAll(daoObj.getItemsASC())
         }
     }
 

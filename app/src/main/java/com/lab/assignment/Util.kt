@@ -14,8 +14,14 @@ import java.util.*
  */
 class Util {
     companion object {
-        // creates thumbnail from given image and returns minified bitmap
-        // saves this thumbnail to given thumbnail location
+        /**
+         *  creates thumbnail from given image and returns minified bitmap
+         *  saves this thumbnail to given thumbnail location
+         *  @param imagePath absolute path of image
+         *  @param thumbnailPath absolute path where thumbnail needs to be stored
+         *  @return bitmap thumbnail
+         */
+
         fun createBitmapThumbnail(imagePath: String, thumbnailPath: String): Bitmap? {
             val originalBitmap = BitmapFactory.decodeFile(imagePath)
             if (originalBitmap == null) {
@@ -39,8 +45,11 @@ class Util {
             return thumbnailBitmap
         }
 
-        // create a path for new thumbnail in cache
-        // return path
+        /**
+         * create a path for new thumbnail in cache
+         * @param context application context
+         * @return path of a file in cache where actual thumbnail will be stored
+         */
         fun getNewThumbnailPath(context: Context): String {
             try {
                 val directoryThumbnail = File(context.cacheDir, "thumbnails")
