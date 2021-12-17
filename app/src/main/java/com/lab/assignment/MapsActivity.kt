@@ -25,21 +25,21 @@ import com.lab.assignment.databinding.ActivityMapsBinding
 import java.text.DateFormat
 import java.util.*
 
+/**
+ * Starting point of the app
+ * tracks user path and shows marker on path and user can set title for the trip
+ */
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var mLocationRequest: LocationRequest
     private lateinit var binding: ActivityMapsBinding
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private val mapView: MapView? = null
     private var mButtonStart: Button? = null
     private var mButtonEnd: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -64,6 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mButtonEnd!!.isEnabled = false
 
 
+        // button to jump to gallery activity
         val fabMap: FloatingActionButton = findViewById(R.id.fab_gallery_activity)
         fabMap.setOnClickListener(View.OnClickListener {
             val intent: Intent = Intent(this, GalleryActivity::class.java)
@@ -74,25 +75,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
     }
-
-
-    private fun filePermissions() {
-        if(ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
-                //
-            } else {
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE),
-                    MANAGE_EXTERNAL_STORAGE
-                )
-            }
-        }
-    }
-
 
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(
@@ -228,6 +210,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         private const val ACCESS_FINE_LOCATION = 123
-        private const val MANAGE_EXTERNAL_STORAGE = 1231
     }
 }

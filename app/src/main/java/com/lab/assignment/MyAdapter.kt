@@ -15,8 +15,6 @@ import kotlinx.coroutines.*
 class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private lateinit var context: Context
 
-
-
     constructor(items: List<ImageData>) : super() {
         MyAdapter.items = items as MutableList<ImageData>
     }
@@ -84,18 +82,6 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             reqWidth: Int,
             reqHeight: Int
         ): Bitmap {
-            // First decode with inJustDecodeBounds=true to check dimensions
-//            val options = BitmapFactory.Options()
-//
-//            options.inJustDecodeBounds = true
-//            BitmapFactory.decodeFile(filePath, options);
-//
-//            // Calculate inSampleSize
-//            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-//
-//            // Decode bitmap with inSampleSize set
-//            options.inJustDecodeBounds = false
-//            return BitmapFactory.decodeFile(filePath, options);
             val originalBitmap = BitmapFactory.decodeFile(filePath)
             return Bitmap.createScaledBitmap(originalBitmap, reqWidth, reqHeight, true)
         }
@@ -131,6 +117,4 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             return inSampleSize.toInt();
         }
     }
-
-
 }

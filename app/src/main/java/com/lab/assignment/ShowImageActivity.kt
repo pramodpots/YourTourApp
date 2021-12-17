@@ -1,4 +1,5 @@
 package com.lab.assignment
+
 import android.app.Activity
 import androidx.appcompat.widget.Toolbar
 import android.content.Intent
@@ -13,8 +14,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lab.assignment.data.ImageDataDao
 import kotlinx.coroutines.*
 
+/**
+ * Shows single image with its metadata
+ * Buttons to view same image on map and edit metadata
+ */
 class ShowImageActivity : AppCompatActivity() {
-    val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     lateinit var daoObj: ImageDataDao
 
     val startForResult =
@@ -48,8 +52,10 @@ class ShowImageActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayData(position: Int){
+    // shows image and details
+    private fun displayData(position: Int) {
         if (position != -1) {
+            // get all ui fields
             val imageView = findViewById<ImageView>(R.id.show_image)
             val titleToolbar = findViewById<Toolbar>(R.id.show_toolbar)
 
@@ -63,6 +69,7 @@ class ShowImageActivity : AppCompatActivity() {
 
             val imageData = MyAdapter.items[position]
 
+            // set image data to ui fields
             imageView.setImageBitmap(MyAdapter.items[position].thumbnail!!)
             titleToolbar.title = MyAdapter.items[position].imageTitle
             tvDescription.text = "Description: " + imageData.imageDescription
@@ -73,22 +80,28 @@ class ShowImageActivity : AppCompatActivity() {
             tvBarometricPressure.text = "Barometric: " + imageData.imageBarometricPressure
             tvTemperature.text = "Temperature: " + imageData.imageTemperature
 
+            // button to jump to edit metadata activity
             val fabEdit: FloatingActionButton = findViewById(R.id.fab_edit)
             fabEdit.setOnClickListener(View.OnClickListener {
                 startForResult.launch(
-                    Intent( this, EditActivity::class.java).apply {
+                    Intent(this, EditActivity::class.java).apply {
                         putExtra("position", position)
                     }
                 )
             })
 
+            // button to jump to view image on map activity
             val fabMap: FloatingActionButton = findViewById(R.id.fab_image_location)
             fabMap.setOnClickListener(View.OnClickListener {
                 startForResult.launch(
-                    Intent( this, MapsImageLocationActivity::class.java).apply {
+                    Intent(this, MapsImageLocationActivity::class.java).apply {
+                        // only sending required fields to new activity
                         putExtra("mLatitude", imageData.imageLatitude.toDouble())
                         putExtra("mLongitude", imageData.imageLongitude.toDouble())
-                        putExtra("mDescription", imageData.imageTripTitle + " | " + imageData.imageDescription)
+                        putExtra(
+                            "mDescription",
+                            imageData.imageTripTitle + " | " + imageData.imageDescription
+                        )
                     }
                 )
             })

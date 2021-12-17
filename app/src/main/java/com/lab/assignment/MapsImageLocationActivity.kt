@@ -11,13 +11,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.lab.assignment.databinding.ActivityMapsImageLocationBinding
 
+/**
+ * This activity shows Image location on map
+ */
 class MapsImageLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsImageLocationBinding
-    private  var mLatitude: Double = 0.0
-    private  var mLongitude: Double = 0.0
-    private  var mDescription: String? = null
+    private var mLatitude: Double = 0.0
+    private var mLongitude: Double = 0.0
+    private var mDescription: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,12 +28,6 @@ class MapsImageLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = ActivityMapsImageLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        val extras = intent.extras
-//        if (extras != null) {
-//            mLatitude = extras.getString("mLatitude").toString().toDouble()
-//            mLongitude = extras.getString("mLongitude").toString().toDouble()
-//        }
 
         val bundle: Bundle? = intent.extras
         try {
