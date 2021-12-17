@@ -323,7 +323,7 @@ class GalleryActivity : AppCompatActivity() {
                 thumbnailUri = thumbURI
             )
             val bitmap = Util.makeThumbnail(imageData.imageUri, imageData.thumbnailUri)
-            imageData.thumbnail = bitmap
+//            imageData.thumbnail = bitmap
 
             // update location details
             fusedLocationClient.lastLocation

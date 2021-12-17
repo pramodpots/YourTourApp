@@ -11,13 +11,12 @@ import java.util.*
 class Util {
     companion object {
         /**
-         * Make a Thumbnail 100x100 in dimensions
+         * Make a Thumbnail 150x150 in dimensions
          * @param photoPath Path of the photo
          * @param thumbPath Path of the thumbnail
          * @return Image
          */
         fun makeThumbnail(photoPath: String, thumbPath: String): Bitmap? {
-            /* generate 100x100 thumbnail */
             println("Building thumbnail for file $photoPath")
             val originalBitmap = BitmapFactory.decodeFile(photoPath)
             if (originalBitmap == null) {
@@ -25,6 +24,8 @@ class Util {
                 return null
             }
             val thumbnailBitmap = Bitmap.createScaledBitmap(originalBitmap, 150, 150, true)
+
+
             try {
                 FileOutputStream(thumbPath).use { out ->
                     thumbnailBitmap.compress(
@@ -46,9 +47,14 @@ class Util {
          * @return New thumbnail path
          */
         fun getNewThumbnailPath(context: Context): String {
-            val thumbnailDir = File(context.cacheDir, "thumbnails")
-            val thumbnailFile = File(thumbnailDir, UUID.randomUUID().toString())
-            return thumbnailFile.absolutePath
+            try {
+                val thumbnailDir = File(context.cacheDir, "thumbnails")
+                val thumbnailFile = File(thumbnailDir, UUID.randomUUID().toString())
+                return thumbnailFile.absolutePath
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return ""
         }
     }
 }

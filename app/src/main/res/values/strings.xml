@@ -23,7 +23,8 @@
     <string name="btnDelete">Delete</string>
     <string name="image_title_label">Title</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps_image_location">MapsImageLocationActivity</string>
 
     <!-- Tab bar labels   -->
-<!--    <string name="title_activity_maps">MapsActivity</string>-->
+    <!--    <string name="title_activity_maps">MapsActivity</string>-->
 </resources>

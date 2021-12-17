@@ -72,7 +72,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             intent.putExtra("tripTitle", tripTitle.text.toString())
             startActivity(intent)
         })
+
     }
+
+
+    private fun filePermissions() {
+        if(ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
+                //
+            } else {
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE),
+                    MANAGE_EXTERNAL_STORAGE
+                )
+            }
+        }
+    }
+
 
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(
@@ -201,13 +221,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 7.0f))
+        val locationLatLng = LatLng(-34.0, 151.0)
+        mMap.addMarker(MarkerOptions().position(locationLatLng).title(""))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationLatLng, 7.0f))
     }
 
     companion object {
         private const val ACCESS_FINE_LOCATION = 123
+        private const val MANAGE_EXTERNAL_STORAGE = 1231
     }
 }

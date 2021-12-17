@@ -81,6 +81,17 @@ class ShowImageActivity : AppCompatActivity() {
                     }
                 )
             })
+
+            val fabMap: FloatingActionButton = findViewById(R.id.fab_image_location)
+            fabMap.setOnClickListener(View.OnClickListener {
+                startForResult.launch(
+                    Intent( this, MapsImageLocationActivity::class.java).apply {
+                        putExtra("mLatitude", imageData.imageLatitude.toDouble())
+                        putExtra("mLongitude", imageData.imageLongitude.toDouble())
+                        putExtra("mDescription", imageData.imageTripTitle + " | " + imageData.imageDescription)
+                    }
+                )
+            })
         }
     }
 }

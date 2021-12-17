@@ -4,16 +4,21 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.lab.assignment.data.ImageData
 import kotlinx.coroutines.*
+import java.lang.Exception
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private lateinit var context: Context
+
+
 
     constructor(items: List<ImageData>) : super() {
         MyAdapter.items = items as MutableList<ImageData>
@@ -38,7 +43,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var imageData = items[position]
-        if (items[position].thumbnailUri == null) {
+        if (items[position].thumbnail == null) {
             items[position].let {
                 scope.launch {
                     val bitmap =
@@ -49,13 +54,6 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
                 }
             }
-        } else {
-            /* load thumbnail from disk if exists */
-            var thumbnailBitmap = BitmapFactory.decodeFile(items[position].thumbnailUri)
-            if (thumbnailBitmap == null) {
-                thumbnailBitmap = Util.makeThumbnail(imageData.imageUri, imageData.thumbnailUri)
-            }
-            holder.imageView.setImageBitmap(thumbnailBitmap)
         }
 
         holder.itemView.setOnClickListener(View.OnClickListener {
@@ -90,17 +88,25 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             reqHeight: Int
         ): Bitmap {
             // First decode with inJustDecodeBounds=true to check dimensions
-            val options = BitmapFactory.Options()
-
-            options.inJustDecodeBounds = true
-            BitmapFactory.decodeFile(filePath, options);
-
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false
-            return BitmapFactory.decodeFile(filePath, options);
+//            val options = BitmapFactory.Options()
+//
+//            options.inJustDecodeBounds = true
+//            BitmapFactory.decodeFile(filePath, options);
+//
+//            // Calculate inSampleSize
+//            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+//
+//            // Decode bitmap with inSampleSize set
+//            options.inJustDecodeBounds = false
+//            return BitmapFactory.decodeFile(filePath, options);
+            val originalBitmap = BitmapFactory.decodeFile(filePath)
+            if (originalBitmap == null) {
+                println("Error loading file $filePath, cannot build thumbnail")
+                var emptyThumbnail: Bitmap? = null
+                emptyThumbnail
+            }
+            val thumbnailBitmap = Bitmap.createScaledBitmap(originalBitmap, 150, 150, true)
+            return thumbnailBitmap
         }
 
         /**
