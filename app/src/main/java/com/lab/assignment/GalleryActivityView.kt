@@ -46,7 +46,6 @@ class GalleryActivityView : AppCompatActivity() {
     private lateinit var easyImage: EasyImage
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var tripTitle: String
-    private lateinit var sensorManager: SensorManager
     private var mPressureValue: Float = 0.0f
     private var mTemperatureValue: Float = 0.0f
     private var galleryViewModel: GalleryViewModel? = null

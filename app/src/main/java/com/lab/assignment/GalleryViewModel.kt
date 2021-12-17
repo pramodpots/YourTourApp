@@ -9,8 +9,8 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
 
     private var galleryRepository: GalleryRepository = GalleryRepository(application)
     private var images: MutableList<ImageData>? = ArrayList<ImageData>()
-    private var imageList :  MutableList<ImageData>? = ArrayList<ImageData>()
-    private var imagesList : LiveData<List<ImageData>>? = null
+    private var imageList: MutableList<ImageData>? = ArrayList<ImageData>()
+    private var imagesList: LiveData<List<ImageData>>? = null
 
 
     init {
@@ -21,34 +21,31 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
         return galleryRepository
     }
 
-    fun getPhotos(): MutableList<ImageData>? {
+
+    fun getImages(): MutableList<ImageData>? {
         images = galleryRepository.getImages()
         imageList!!.addAll(images!!)
         return imageList
     }
 
-    fun getAllPhotos(): LiveData<List<ImageData>>? {
-        this.imagesList = (this.galleryRepository.getAllPhotos())!!
+
+    fun getAllImages(): LiveData<List<ImageData>>? {
+        this.imagesList = (this.galleryRepository.getAllImages())!!
         return imagesList
     }
 
-    fun insertPhoto(image: ImageData?) {
-         galleryRepository.insertPhoto(image)
+
+    fun insertImage(image: ImageData?) {
+        galleryRepository.insertImage(image)
     }
 
-    fun updatePhoto(image: ImageData?) {
-        galleryRepository.updatePhoto(image)
+
+    fun updateImage(image: ImageData?) {
+        galleryRepository.updateImage(image)
     }
+
 
     fun deletePhoto(image: ImageData?) {
-        galleryRepository.deletePhoto(image)
+        galleryRepository.deleteImage(image)
     }
-    /*suspend fun getFilteredPhotos(
-        title: String,
-        description: String,
-        date: String,
-    ): LiveData<List<ImageData>>? {
-        return galleryRepository.getFilteredPhotos(title, description, date)
-    }*/
-
 }
