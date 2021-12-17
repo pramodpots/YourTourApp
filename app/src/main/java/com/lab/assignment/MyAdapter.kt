@@ -4,16 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.lab.assignment.data.ImageData
 import kotlinx.coroutines.*
-import java.lang.Exception
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private lateinit var context: Context
@@ -100,13 +97,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
 //            options.inJustDecodeBounds = false
 //            return BitmapFactory.decodeFile(filePath, options);
             val originalBitmap = BitmapFactory.decodeFile(filePath)
-            if (originalBitmap == null) {
-                println("Error loading file $filePath, cannot build thumbnail")
-                var emptyThumbnail: Bitmap? = null
-                emptyThumbnail
-            }
-            val thumbnailBitmap = Bitmap.createScaledBitmap(originalBitmap, 150, 150, true)
-            return thumbnailBitmap
+            return Bitmap.createScaledBitmap(originalBitmap, reqWidth, reqHeight, true)
         }
 
         /**
