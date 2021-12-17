@@ -1,6 +1,7 @@
 package com.lab.assignment
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -59,6 +60,10 @@ class Util {
                 e.printStackTrace()
             }
             return ""
+        }
+
+        fun checkIfCameraHardwarePresent(context: Context): Boolean {
+            return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
         }
     }
 }

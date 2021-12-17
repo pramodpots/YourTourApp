@@ -105,12 +105,26 @@ class GalleryActivityView : AppCompatActivity() {
         // initialize easy image library
         initEasyImage()
 
+
+        // the floating button that will allow us to get the images from the Gallery
+        // or open camera based on user input
+        val fabCamera: FloatingActionButton = findViewById(R.id.fab_camera)
+            fabCamera.setOnClickListener(View.OnClickListener {
+            easyImage.openCameraForImage (this@GalleryActivityView)
+        })
+
         // the floating button that will allow us to get the images from the Gallery
         // or open camera based on user input
         val fabGallery: FloatingActionButton = findViewById(R.id.fab_gallery)
         fabGallery.setOnClickListener(View.OnClickListener {
-            easyImage.openChooser(this@GalleryActivityView)
+            easyImage.openGallery(this@GalleryActivityView)
         })
+
+
+        /* hide camera in case of no hardware */
+        if (!Util.checkIfCameraHardwarePresent(applicationContext)) {
+            fabCamera.hide()
+        }
 
         // start sensor service
         val intent = Intent(applicationContext, SensorDataService::class.java)
