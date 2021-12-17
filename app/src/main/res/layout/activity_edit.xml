@@ -33,7 +33,7 @@
                 app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
-
+        <!-- Actual Image -->
         <ImageView
             android:id="@+id/edit_image"
             android:layout_width="match_parent"
@@ -46,6 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_appBarLayout" />
 
+        <!-- Image name / title -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_title_label"
             android:layout_width="0dp"
@@ -66,6 +67,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Image description -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_description_label"
             android:layout_width="0dp"
@@ -86,7 +88,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    trip title-->
+        <!-- trip title -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_trip_title_label"
             android:layout_width="0dp"
@@ -107,7 +109,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    date time-->
+        <!-- date time -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_date_time_label"
             android:layout_width="0dp"
@@ -128,7 +130,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    latitue-->
+        <!-- latitude -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_latitude_label"
             android:layout_width="0dp"
@@ -149,7 +151,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    longitude-->
+        <!-- longitude -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_longitude_label"
             android:layout_width="0dp"
@@ -170,7 +172,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    barometric pressure-->
+        <!-- barometric pressure -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_barometric_pressure_label"
             android:layout_width="0dp"
@@ -191,7 +193,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    temperature -->
+        <!-- temperature -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_image_temperature_label"
             android:layout_width="0dp"
@@ -212,7 +214,7 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
+        <!-- delete button -->
         <Button
             android:id="@+id/delete_button"
             android:layout_width="120dp"
@@ -226,6 +228,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/save_button" />
 
+        <!-- save button -->
         <Button
             android:id="@+id/save_button"
             android:layout_width="120dp"
@@ -238,6 +241,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_image_temperature_label"
             tools:layout_editor_absoluteY="864dp" />
 
+        <!-- cancel button -->
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="120dp"
@@ -250,7 +254,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/save_button"
             app:layout_constraintTop_toTopOf="@+id/save_button" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

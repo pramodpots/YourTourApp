@@ -143,6 +143,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBarometricPressure" />
 
+    <!-- button to jump to edit activity -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_edit"
         android:layout_width="wrap_content"
@@ -156,6 +157,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <!-- button to view image on map -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_image_location"
         android:layout_width="wrap_content"
