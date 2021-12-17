@@ -78,6 +78,9 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         /**
          * helper function to generate a bitmap object of a given size from an image's file path.
+         * @param filePath absolute path of the image
+         * @param reqWidth width of bitmap
+         * @param reqHeight height of bitmap]
          */
         suspend fun decodeSampledBitmapFromResource(
             filePath: String,

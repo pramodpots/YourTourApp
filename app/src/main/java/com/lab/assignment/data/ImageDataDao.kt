@@ -14,10 +14,13 @@ import androidx.room.Update
 @Dao
 interface ImageDataDao {
     @Query("SELECT * from image ORDER by id ASC")
-    suspend fun getItems(): List<ImageData>
+    fun getLiveItems(): LiveData<List<ImageData>>?
 
     @Query("SELECT * from image ORDER by id ASC")
-    fun getLiveItems(): LiveData<List<ImageData>>?
+    suspend fun getItems(): List<ImageData>
+
+    @Query("SELECT * from image ORDER by id DESC")
+    suspend fun getItemsDESC(): List<ImageData>
 
     @Query("SELECT * from image WHERE id = :id")
     fun getItem(id: Int): ImageData
