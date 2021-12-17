@@ -6,20 +6,17 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +26,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lab.assignment.data.ImageData
 import com.lab.assignment.data.ImageDataDao
+import com.lab.com6510.GalleryViewModel
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
 import java.time.Instant
@@ -41,7 +39,7 @@ import java.util.ArrayList
  * Activity which shows thumbnails of images in grid view
  * User can navigate to show image activity on clicking of thumbnail
  */
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivityView : AppCompatActivity() {
     private var myDataset: MutableList<ImageData> = ArrayList<ImageData>()
     private lateinit var daoObj: ImageDataDao
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
@@ -52,6 +50,7 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var sensorManager: SensorManager
     private var mPressureValue: Float = 0.0f
     private var mTemperatureValue: Float = 0.0f
+    private var galleryViewModel: GalleryViewModel? = null
 
     companion object {
         private const val REQUEST_READ_EXTERNAL_STORAGE = 2987
@@ -88,6 +87,8 @@ class GalleryActivity : AppCompatActivity() {
 
         initData()
 
+        this.galleryViewModel = ViewModelProvider(this)[GalleryViewModel::class.java]
+
         mRecyclerView = findViewById(R.id.grid_recycler_view)
         // set up the RecyclerView
         val numberOfColumns = 4
@@ -111,7 +112,7 @@ class GalleryActivity : AppCompatActivity() {
         // or open camera based on user input
         val fabGallery: FloatingActionButton = findViewById(R.id.fab_gallery)
         fabGallery.setOnClickListener(View.OnClickListener {
-            easyImage.openChooser(this@GalleryActivity)
+            easyImage.openChooser(this@GalleryActivityView)
         })
 
         // start sensor service
@@ -133,8 +134,9 @@ class GalleryActivity : AppCompatActivity() {
      * Init data by loading from the database
      */
     private fun initData() {
+
         GlobalScope.launch {
-            daoObj = (this@GalleryActivity.application as ImageApplication)
+            daoObj = (this@GalleryActivityView.application as ImageApplication)
                 .databaseObj.imageDataDao()
             myDataset.addAll(daoObj.getItems())
         }

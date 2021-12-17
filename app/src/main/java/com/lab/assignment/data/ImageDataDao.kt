@@ -1,5 +1,6 @@
 package com.lab.assignment.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -14,6 +15,9 @@ import androidx.room.Update
 interface ImageDataDao {
     @Query("SELECT * from image ORDER by id ASC")
     suspend fun getItems(): List<ImageData>
+
+    @Query("SELECT * from image ORDER by id ASC")
+    fun getLiveItems(): LiveData<List<ImageData>>?
 
     @Query("SELECT * from image WHERE id = :id")
     fun getItem(id: Int): ImageData

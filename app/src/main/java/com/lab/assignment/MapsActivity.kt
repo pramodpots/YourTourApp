@@ -17,7 +17,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -67,7 +66,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // button to jump to gallery activity
         val fabMap: FloatingActionButton = findViewById(R.id.fab_gallery_activity)
         fabMap.setOnClickListener(View.OnClickListener {
-            val intent: Intent = Intent(this, GalleryActivity::class.java)
+            val intent: Intent = Intent(this, GalleryActivityView::class.java)
             var tripTitle = findViewById<EditText>(R.id.etTripTitle)
 
             intent.putExtra("tripTitle", tripTitle.text.toString())

@@ -52,7 +52,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         holder.itemView.setOnClickListener(View.OnClickListener {
-            val mainActivityContext = context as GalleryActivity
+            val mainActivityContext = context as GalleryActivityView
             mainActivityContext.startForResult.launch(
                 Intent(context, ShowImageActivity::class.java).apply {
                     putExtra("position", position)
