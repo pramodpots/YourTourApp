@@ -42,7 +42,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             items[position].let {
                 scope.launch {
                     val bitmap =
-                        decodeSampledBitmapFromResource(it.imageUri, 150, 150)
+                        decodeSampledBitmapFromResource(it.imageUri, 100, 100)
                     bitmap?.let {
                         items[position].thumbnail = it
                         holder.imageView.setImageBitmap(items[position].thumbnail)

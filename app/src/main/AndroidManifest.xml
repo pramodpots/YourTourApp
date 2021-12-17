@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.lab.assignment">
 
     <!--
@@ -73,13 +74,19 @@
         </activity>
         <activity
             android:name=".EditActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/title_activity_edit"
+            />
         <activity
             android:name=".GalleryActivity"
-            android:exported="false"></activity>
+            android:exported="false"
+            android:label="@string/title_activity_gallery">
+        </activity>
         <activity
             android:name=".ShowImageActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/title_activity_show_image_activity"
+            />
     </application>
 
 </manifest>

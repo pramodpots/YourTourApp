@@ -23,7 +23,7 @@ class Util {
                 return null
             }
             // get small sized bitmap from original bitmap
-            val thumbnailBitmap = Bitmap.createScaledBitmap(originalBitmap, 150, 150, true)
+            val thumbnailBitmap = Bitmap.createScaledBitmap(originalBitmap, 100, 100, true)
 
             try {
                 FileOutputStream(thumbnailPath).use { out ->
