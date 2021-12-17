@@ -2,10 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lab.assignment">
 
-
+    <!--
+        File read write mange permissions for saving images to external storage
+    -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -55,10 +59,8 @@
         <service
             android:name=".SensorDataService"
             android:enabled="true"
-            android:exported="true" /> <!-- <activity -->
-        <!-- android:name="com.lab.assignment.MapsActivity" -->
-        <!-- android:exported="false" -->
-        <!-- android:label="@string/title_activity_maps" /> -->
+            android:exported="true" />
+
         <activity
             android:name=".MapsActivity"
             android:exported="true"
@@ -75,13 +77,6 @@
         <activity
             android:name=".GalleryActivity"
             android:exported="false">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".ShowImageActivity"
