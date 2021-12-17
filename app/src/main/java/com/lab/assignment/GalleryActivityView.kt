@@ -26,7 +26,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lab.assignment.data.ImageData
 import com.lab.assignment.data.ImageDataDao
-import com.lab.com6510.GalleryViewModel
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
 import java.time.Instant

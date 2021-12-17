@@ -23,7 +23,7 @@ abstract class ImageRoomDatabase: RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ImageRoomDatabase::class.java,
-                    "lab5_database"
+                    "your_tour_database"
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object specified.
                     .fallbackToDestructiveMigration()
